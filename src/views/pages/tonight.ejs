@@ -1,0 +1,30 @@
+<%- include("../partials/head", { title: t("meta.tonight"), desc: t("meta.tonightDesc") }) %>
+<%- include("../partials/header") %>
+<main id="contenu" class="on-dark tonight">
+  <div class="wrap">
+    <div class="stack"><div class="eyebrow"><%= U.fmtDate(U.today(), lang, true) %></div><h1><%= t("tonight.title1") %> <span><%= t("tonight.title2") %></span></h1></div>
+    <div class="tgrid">
+      <% var wd = ti < 5 ? c.week[ti] : null; c.pubs.forEach(function(p){ var st = statuses[p.id]; %>
+      <article class="tcard">
+        <span class="pill <%= st.cls %>"><%= st.label %></span>
+        <h2><%= p.name %></h2>
+        <% if (p.status === "soon") { %>
+          <p class="m0"><%= t("status.soon") %><%= p.open_date ? " · " + U.fmtDate(p.open_date, lang, true) : "" %></p>
+          <a class="btn ghost sm" href="/<%= lang %>/concorde"><%= t("tonight.openingCta") %></a>
+        <% } else { var left = seats[p.id]; %>
+          <% if (left === null) { %><div class="seats ask"><%= t("tonight.seatsAsk") %><small><%= t("tonight.seatsAskSub") %></small></div>
+          <% } else if (left === 0) { %><div class="seats full"><%= t("tonight.full") %><small><%= t("tonight.fullSub") %></small></div>
+          <% } else { %><div class="seats"><%= left %><small><%= t("tonight.seats") %></small></div><% } %>
+          <% var mm = todayMatches.filter(function(m){ return !m.pub_id || m.pub_id === p.id; }); %>
+          <div class="ln"><span class="mono"><%= t("tonight.match") %></span><% if (mm.length) { mm.forEach(function(m){ %><%= m.time %> · <%= m.title %><%= m.sub ? " — " + m.sub : "" %><br><% }) } else { %><%= t("tonight.noMatch") %><% } %></div>
+          <div class="ln"><span class="mono"><%= t("tonight.dish") %></span><%= wd && wd.name ? tr(wd, "name") + (wd.price ? " · " + wd.price : "") : t("tonight.regular") %></div>
+          <% if (p.tel) { %><div class="ln"><span class="mono"><%= t("tonight.phone") %></span><%= p.tel %></div><% } %>
+          <a class="btn sm" href="/<%= lang %>?pub=<%= p.id %>#reserver"><%= t("pubs.bookHere") %></a>
+        <% } %>
+      </article>
+      <% }) %>
+    </div>
+    <div class="actions"><a class="btn ghost" href="/<%= lang %>"><%= t("tonight.all") %></a></div>
+  </div>
+</main>
+<%- include("../partials/footer") %>

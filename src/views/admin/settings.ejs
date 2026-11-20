@@ -1,0 +1,33 @@
+<%- include("_top", { title: "Réglages" }) %>
+<h1 class="atitle">Réglages</h1>
+<form class="stack-lg" method="post" action="/admin/reglages"><%- include("_csrf") %>
+  <section class="card">
+    <h2 class="asub">Bandeau d'annonce</h2>
+    <div class="grid2">
+      <div class="field"><label for="a-fr">Message (FR)</label><input type="text" id="a-fr" name="annonce_fr" value="<%= s.annonce_fr || "" %>" maxlength="160" placeholder="Ce samedi, soirée Six Nations dès 15 h à Châtelaine"></div>
+      <div class="field"><label for="a-en">Message (EN)</label><input type="text" id="a-en" name="annonce_en" value="<%= s.annonce_en || "" %>" maxlength="160"></div>
+    </div>
+    <label class="ck"><input type="checkbox" name="annonce_active" value="1"<%= s.annonce_active === "1" ? " checked" : "" %>> Afficher le bandeau sur le site et l'écran TV</label>
+  </section>
+  <section class="card">
+    <h2 class="asub">Automatisations</h2>
+    <label class="ck"><input type="checkbox" name="monday_auto" value="1"<%= s.monday_auto === "1" ? " checked" : "" %>> Envoyer automatiquement l'e-mail du lundi à 8 h</label>
+    <p class="small muted m0">E-mails : <b><%= mailMode === "smtp" ? "envoi réel (SMTP)" : "mode test, rien n'est envoyé" %></b>. Ces modes se règlent dans le fichier .env du serveur.</p>
+  </section>
+  <section class="card">
+    <h2 class="asub">Société (mentions légales et protection des données)</h2>
+    <div class="grid2">
+      <div class="field"><label for="c-name">Raison sociale</label><input type="text" id="c-name" name="company_name" value="<%= s.company_name || "" %>" maxlength="200"></div>
+      <div class="field"><label for="c-ide">Numéro IDE (CHE-…)</label><input type="text" id="c-ide" name="company_ide" value="<%= s.company_ide || "" %>" maxlength="40" placeholder="CHE-123.456.789"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="c-addr">Adresse du siège</label><input type="text" id="c-addr" name="company_address" value="<%= s.company_address || "" %>" maxlength="240"></div>
+      <div class="field"><label for="c-mail">E-mail de contact (reçoit aussi les réservations si le pub n'a pas d'e-mail)</label><input type="email" id="c-mail" name="contact_email" value="<%= s.contact_email || "" %>" maxlength="160"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="c-upd">Date de mise à jour de la politique</label><input type="text" id="c-upd" name="privacy_updated" value="<%= s.privacy_updated || "" %>" maxlength="40" placeholder="novembre 2026"></div>
+    </div>
+  </section>
+  <button class="btn" type="submit">Enregistrer les réglages</button>
+</form>
+<%- include("_bottom") %>

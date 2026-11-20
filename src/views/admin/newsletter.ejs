@@ -1,0 +1,29 @@
+<%- include("_top", { title: "Newsletter" }) %>
+<h1 class="atitle">Newsletter &amp; e-mail du lundi</h1>
+<% var conf = subs.filter(function(s){ return s.status === "confirmed"; }); %>
+<div class="stats">
+  <div class="stat"><b class="mono"><%= conf.length %></b><span>inscrits confirmés</span></div>
+  <div class="stat"><b class="mono"><%= subs.length - conf.length %></b><span>en attente de confirmation</span></div>
+  <% pubs.forEach(function(p){ %><div class="stat"><b class="mono"><%= conf.filter(function(s){ return U.json(s.pubs, []).indexOf(p.id) !== -1; }).length %></b><span><%= p.name %></span></div><% }) %>
+</div>
+<section class="card">
+  <h2 class="asub">E-mail du lundi</h2>
+  <p class="m0">Construit automatiquement avec le menu de la semaine, les matchs et les pressions disponibles. Envoi automatique : <b><%= auto ? "activé (lundi 8 h)" : "désactivé" %></b><%= last ? " · dernier envoi semaine du " + U.fmtDate(last, "fr") : "" %>.</p>
+  <div class="actions">
+    <a class="btn line" href="/admin/newsletter/apercu" target="_blank" rel="noopener">Aperçu FR</a>
+    <a class="btn line" href="/admin/newsletter/apercu?lang=en" target="_blank" rel="noopener">Aperçu EN</a>
+    <form method="post" action="/admin/newsletter/envoyer"><%- include("_csrf") %><input type="hidden" name="mode" value="test"><button class="btn line" type="submit">M'envoyer un test</button></form>
+  </div>
+  <form class="lookup" method="post" action="/admin/newsletter/envoyer"><%- include("_csrf") %>
+    <div class="field"><label for="confirm">Pour envoyer maintenant à <%= conf.length %> inscrit(s), tapez ENVOYER</label><input type="text" id="confirm" name="confirm" autocomplete="off" pattern="ENVOYER"></div>
+    <button class="btn" type="submit">Envoyer à tous</button>
+  </form>
+</section>
+<div class="ahead"><h2 class="asub">Inscrits</h2><a class="btn sm line" href="/admin/newsletter.csv">Exporter (CSV)</a></div>
+<div class="rlist">
+<% if (!subs.length) { %><div class="empty">Aucun inscrit pour l'instant.</div><% } %>
+<% subs.slice(0, 200).forEach(function(s){ %>
+  <div class="rrow"><div class="who"><b class="mono"><%= s.email %></b><span><%= U.json(s.pubs, []).map(function(k){ var p = pubs.find(function(x){ return x.id === k; }); return p ? p.name : k; }).join(", ") %> · <%= s.lang.toUpperCase() %></span></div><span class="pill <%= s.status === "confirmed" ? "confirmed" : "pending" %>"><%= s.status === "confirmed" ? "Confirmé" : "En attente" %></span></div>
+<% }) %>
+</div>
+<%- include("_bottom") %>

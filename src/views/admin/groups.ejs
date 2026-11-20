@@ -1,0 +1,21 @@
+<%- include("_top", { title: "Groupes" }) %>
+<h1 class="atitle">Demandes de groupe</h1>
+<div class="rlist">
+<% if (!rows.length) { %><div class="empty">Aucune demande pour l'instant. Le formulaire est dans la section « Groupes » du site.</div><% } %>
+<% var nx = { new: [["sent","Offre envoyée",""]], sent: [["won","Acceptée","ok"],["lost","Annulée","line"]], won: [["new","Rétablir","line"]], lost: [["new","Rétablir","line"]] };
+   var pubsN = {}; pubsAll.forEach(function(p){ pubsN[p.id] = p.name; });
+   rows.forEach(function(g){ %>
+  <article class="ritem <%= g.status %>">
+    <div class="when"><b><%= g.persons %> pers.</b><%= g.date ? U.fmtDate(g.date, "fr") : "date libre" %></div>
+    <div class="who"><b><%= g.name %> · <%= pubsN[g.pub_id] %></b>
+      <span><%= g.formule %><%= g.estimate ? " · estimation " + U.chf(g.estimate) + " CHF" : "" %><%= g.budget ? " · budget " + U.chf(g.budget) + " CHF" : "" %></span>
+      <span class="mono"><% if (g.phone) { %><a href="tel:<%= g.phone %>"><%= g.phone %></a><% } %><%= g.phone && g.email ? " · " : "" %><% if (g.email) { %><a href="mailto:<%= g.email %>"><%= g.email %></a><% } %></span>
+      <% if (g.note) { %><span class="note">« <%= g.note %> »</span><% } %>
+      <span class="small muted">Reçue le <%= U.fmtDate(U.isoDate(new Date(+g.created_at)), "fr") %></span></div>
+    <div class="acts"><span class="pill <%= g.status %>"><%= GSTATUS[g.status] %></span>
+      <% (nx[g.status] || []).forEach(function(a){ %><form method="post" action="/admin/groupes/<%= g.id %>/status"><%- include("_csrf") %><input type="hidden" name="status" value="<%= a[0] %>"><button class="btn sm <%= a[2] %>" type="submit"><%= a[1] %></button></form><% }) %>
+    </div>
+  </article>
+<% }) %>
+</div>
+<%- include("_bottom") %>

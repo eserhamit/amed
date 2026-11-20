@@ -1,0 +1,25 @@
+<%- include("../partials/head", { title: t("meta.concorde"), desc: t("meta.concordeDesc") }) %>
+<%- include("../partials/header") %>
+<main id="contenu" class="on-dark launch">
+  <div class="wrap">
+    <div class="stack"><div class="eyebrow"><%= t("concorde.eyebrow") %></div><h1>Goudale <span><%= t("concorde.title2") %></span></h1>
+      <p class="m0 lead-dark narrow"><%= pub && pub.open_date ? t("concorde.leadDate", { date: U.fmtDate(pub.open_date, lang, true) }) + " " : "" %><%= t("concorde.lead") %></p></div>
+    <div class="countdown" id="countdown" data-date="<%= pub && pub.open_date ? pub.open_date : "" %>" data-units="<%= t("concorde.units").join(",") %>" data-opened="<%= t("concorde.opened") %>">
+      <div class="wide"><b><%= pub && pub.open_date ? U.fmtDate(pub.open_date, lang, true) : t("concorde.soon") %></b><span><%= t("concorde.soonSub") %></span></div>
+    </div>
+    <form class="card narrow" method="post" action="/<%= lang %>/concorde" novalidate>
+      <h2 class="h2-sm"><%= t("concorde.form") %></h2>
+      <% if (errors.length) { %><div class="errors" role="alert"><b><%= t("errors.title") %></b><ul><% errors.forEach(function(e){ %><li><%= e %></li><% }) %></ul></div><% } %>
+      <%- include("../partials/antibot", { form: "opening" }) %>
+      <div class="grid3">
+        <div class="field"><label for="o-name"><%= t("concorde.name") %></label><input type="text" id="o-name" name="name" autocomplete="name" maxlength="120" value="<%= values.name || "" %>" required></div>
+        <div class="field"><label for="o-pers"><%= t("concorde.persons") %></label><input type="number" id="o-pers" name="persons" min="1" max="10" value="<%= values.persons || 2 %>" inputmode="numeric"></div>
+        <div class="field"><label for="o-email"><%= t("concorde.email") %></label><input type="email" id="o-email" name="email" autocomplete="email" maxlength="160" value="<%= values.email || "" %>" required></div>
+      </div>
+      <p class="consent"><a href="/<%= lang %>/confidentialite"><%= t("resa.consent") %></a></p>
+      <button class="btn" type="submit"><%= t("concorde.submit") %></button>
+    </form>
+    <div class="actions"><a class="btn ghost" href="/<%= lang %>"><%= t("concorde.discover") %></a></div>
+  </div>
+</main>
+<%- include("../partials/footer") %>

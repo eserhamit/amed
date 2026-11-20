@@ -1,0 +1,13 @@
+<footer>
+  <div class="wrap">
+    <div><div class="logo">GOUDALE <small><%= lang === "en" ? "GENEVA" : "GENÈVE" %></small></div><p><%= t("footer.tagline") %></p></div>
+    <% c.pubs.forEach(function(p){ %>
+    <div><h3><%= p.name %></h3><p><% if (p.status === "soon") { %><a href="/<%= lang %>/concorde"><%= t("footer.soon") %></a><% } else { %><%= p.addr || t("pubs.todo") %><% if (p.tel) { %>
+<span class="mono"><%= p.tel %></span><% } %><% } %></p></div>
+    <% }) %>
+    <div class="legal"><span>© <%= new Date().getFullYear() %> Pub Goudale Genève · <a href="/<%= lang %>/mentions-legales"><%= t("footer.legal") %></a> · <a href="/<%= lang %>/confidentialite"><%= t("footer.privacy") %></a></span><span><%= t("footer.alcohol") %></span></div>
+  </div>
+</footer>
+<script src="/static/js/site.js?v=<%= v %>" defer></script>
+</body>
+</html>

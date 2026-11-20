@@ -1,0 +1,24 @@
+<body>
+<a class="skip" href="#contenu"><%= t("nav.skip") %></a>
+<% if (annonce) { %><div class="annonce" role="status"><div class="wrap"><span class="mono">Info</span><span><%= annonce %></span></div></div><% } %>
+<header class="top">
+  <div class="wrap bar">
+    <a class="logo" href="/<%= lang %>">GOUDALE <small><%= lang === "en" ? "GENEVA" : "GENÈVE" %></small></a>
+    <nav class="links" aria-label="<%= lang === "en" ? "Main navigation" : "Navigation principale" %>">
+      <a class="hot" href="/<%= lang %>/ce-soir"><%= t("nav.tonight") %></a>
+      <a href="/<%= lang %>#pubs"><%= t("nav.pubs") %></a>
+      <a href="/<%= lang %>#semaine"><%= t("nav.menu") %></a>
+      <a href="/<%= lang %>#carte"><%= t("nav.carte") %></a>
+      <a href="/<%= lang %>#groupes"><%= t("nav.groups") %></a>
+      <a href="/<%= lang %>#fidelite"><%= t("nav.loyalty") %></a>
+    </nav>
+    <div class="hdr-actions">
+      <a class="langsw" href="<%= otherUrl %>" hreflang="<%= t("other") %>" lang="<%= t("other") %>"><%= t("other").toUpperCase() %></a>
+      <a class="btn" href="/<%= lang %>#reserver"><%= t("nav.book") %></a>
+    </div>
+  </div>
+  <div class="wrap"><nav class="mnav" aria-label="<%= lang === "en" ? "Mobile navigation" : "Navigation mobile" %>">
+    <a href="/<%= lang %>/ce-soir"><%= t("nav.tonight") %></a><a href="/<%= lang %>#pubs"><%= t("nav.pubs") %></a><a href="/<%= lang %>#semaine"><%= t("nav.menu") %></a><a href="/<%= lang %>#carte"><%= t("nav.carte") %></a><a href="/<%= lang %>#groupes"><%= t("nav.groups") %></a><a href="/<%= lang %>#fidelite"><%= t("nav.loyalty") %></a><a href="/<%= lang %>/concorde"><%= t("nav.concorde") %></a>
+  </nav></div>
+</header>
+<% if (flash) { %><div class="flash" role="status"><div class="wrap"><%= flash %></div></div><% } %>

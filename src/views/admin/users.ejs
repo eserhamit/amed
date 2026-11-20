@@ -1,0 +1,29 @@
+<%- include("_top", { title: "Comptes" }) %>
+<h1 class="atitle">Comptes</h1>
+<% if (created) { %><div class="aflash ok" role="status">Mot de passe temporaire pour <b><%= created.email %></b> : <span class="mono copy" data-copy><%= created.pw %></span> <button class="btn sm line" type="button" data-copy-btn>Copier</button><br>Transmettez-le en personne ou par téléphone. Il ne sera plus affiché. La personne devra le changer et activer la double authentification à sa première connexion.</div><% } %>
+<div class="rlist">
+<% users.forEach(function(u){ var p = pubs.find(function(x){ return x.id === u.pub_id; }); %>
+  <div class="ritem<%= u.active ? "" : " noshow" %>">
+    <div class="when"><b><%= u.role === "owner" ? "Propriétaire" : "Gérant" %></b><%= p ? p.name : "" %></div>
+    <div class="who"><b><%= u.name %></b><span class="mono"><%= u.email %></span><span><%= u.totp_enabled ? "2FA activée" : "2FA non activée" %> · dernière connexion <%= u.last_login_at ? new Date(+u.last_login_at).toLocaleString("fr-CH") : "jamais" %><%= u.locked_until && u.locked_until > Date.now() ? " · verrouillé" : "" %></span></div>
+    <div class="acts"><% if (u.id !== user.id) { %>
+      <form method="post" action="/admin/utilisateurs/<%= u.id %>/reset" data-confirm="Réinitialiser ?"><%- include("_csrf") %><button class="btn sm line" type="submit">Nouveau mot de passe</button></form>
+      <% if (u.totp_enabled) { %><form method="post" action="/admin/utilisateurs/<%= u.id %>/reset2fa" data-confirm="Réinitialiser la 2FA ?"><%- include("_csrf") %><button class="btn sm line" type="submit">Réinitialiser la 2FA</button></form><% } %>
+      <form method="post" action="/admin/utilisateurs/<%= u.id %>/toggle"<%= u.active ? ' data-confirm="Désactiver ?"' : "" %>><%- include("_csrf") %><button class="btn sm <%= u.active ? "danger" : "" %>" type="submit"><%= u.active ? "Désactiver" : "Réactiver" %></button></form>
+    <% } else { %><span class="small muted">C'est vous</span><% } %></div>
+  </div>
+<% }) %>
+</div>
+<h2 class="asub">Créer un compte</h2>
+<form class="card" method="post" action="/admin/utilisateurs"><%- include("_csrf") %>
+  <div class="grid2">
+    <div class="field"><label for="u-name">Nom</label><input type="text" id="u-name" name="name" maxlength="120" required></div>
+    <div class="field"><label for="u-email">E-mail</label><input type="email" id="u-email" name="email" maxlength="160" required></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label for="u-role">Rôle</label><select id="u-role" name="role"><option value="manager">Gérant d'un pub (réservations, groupes, fidélité, épuisé)</option><option value="owner">Propriétaire (accès complet)</option></select></div>
+    <div class="field"><label for="u-pub">Pub (pour un gérant)</label><select id="u-pub" name="pub_id"><% pubs.forEach(function(p){ %><option value="<%= p.id %>"><%= p.name %></option><% }) %></select></div>
+  </div>
+  <button class="btn" type="submit">Créer le compte</button>
+</form>
+<%- include("_bottom") %>

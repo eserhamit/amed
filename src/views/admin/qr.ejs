@@ -1,0 +1,15 @@
+<%- include("_top", { title: "QR codes" }) %>
+<h1 class="atitle">QR codes</h1>
+<p class="muted">À imprimer pour les tables, le comptoir ou la vitrine. PNG haute définition (1024 px) ou SVG pour l'imprimeur.</p>
+<div class="qrgrid">
+<% Object.keys(targets).filter(function(k){ return targets[k][1]; }).forEach(function(k){ %>
+  <div class="qritem card"><b><%= targets[k][0] %></b><img src="/admin/qr/<%= k %>.svg" alt="QR code <%= targets[k][0] %>" width="180" height="180"><span class="mono small muted"><%= site + targets[k][1] %></span>
+    <div class="actions"><a class="btn sm" href="/admin/qr/<%= k %>.png?dl=1">PNG</a><a class="btn sm line" href="/admin/qr/<%= k %>.svg?dl=1">SVG</a></div></div>
+<% }) %>
+<% pubs.filter(function(p){ return p.review_url; }).forEach(function(p){ %>
+  <div class="qritem card"><b>Avis Google · <%= p.name %></b><img src="/admin/qr/avis-<%= p.id %>.svg" alt="QR code avis Google <%= p.name %>" width="180" height="180"><span class="mono small muted">Lien d'avis du pub</span>
+    <div class="actions"><a class="btn sm" href="/admin/qr/avis-<%= p.id %>.png?dl=1">PNG</a><a class="btn sm line" href="/admin/qr/avis-<%= p.id %>.svg?dl=1">SVG</a></div></div>
+<% }) %>
+</div>
+<p class="small muted">Écran TV : ouvrez <span class="mono"><%= site %>/fr/ecran?pub=chatelaine</span> dans le navigateur de la TV (remplacez chatelaine par tourelle selon le pub). Double-cliquez pour le plein écran.</p>
+<%- include("_bottom") %>

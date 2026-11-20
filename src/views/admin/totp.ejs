@@ -1,0 +1,13 @@
+<%- include("_top", { title: "Double authentification", flash: null }) %>
+<section class="auth">
+  <div class="logo big">GOUDALE <small>GÉRANT</small></div>
+  <form class="card" method="post" action="/admin/2fa" autocomplete="off">
+    <h1>Code de sécurité</h1>
+    <p class="m0">Ouvrez votre application d'authentification (Google Authenticator, Microsoft Authenticator, 1Password…) et saisissez le code à 6 chiffres.</p>
+    <% if (error) { %><div class="aflash err" role="alert"><%= error %></div><% } %>
+    <%- include("_csrf") %>
+    <div class="field"><label for="code">Code à 6 chiffres</label><input type="text" id="code" name="code" inputmode="numeric" pattern="[0-9 ]{6,7}" autocomplete="one-time-code" required autofocus class="otp"></div>
+    <button class="btn" type="submit">Valider</button>
+  </form>
+</section>
+<%- include("_bottom") %>

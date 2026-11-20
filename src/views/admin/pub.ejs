@@ -1,0 +1,37 @@
+<%- include("_top", { title: "Pub " + pub.name }) %>
+<h1 class="atitle">Pubs, horaires &amp; capacité</h1>
+<div class="tabs"><% pubsAll.forEach(function(p){ %><a class="tab" href="/admin/pubs/<%= p.id %>" aria-selected="<%= p.id === pub.id %>"><%= p.name %></a><% }) %></div>
+<form class="card" method="post" action="/admin/pubs/<%= pub.id %>"><%- include("_csrf") %>
+  <div class="grid3">
+    <div class="field"><label for="p-name">Nom</label><input type="text" id="p-name" name="name" value="<%= pub.name %>" maxlength="80" required></div>
+    <div class="field"><label for="p-status">Statut</label><select id="p-status" name="status"><option value="open"<%= pub.status !== "soon" ? " selected" : "" %>>Ouvert</option><option value="soon"<%= pub.status === "soon" ? " selected" : "" %>>Ouverture prochaine</option></select></div>
+    <div class="field"><label for="p-open">Date d'ouverture (compte à rebours)</label><input type="date" id="p-open" name="open_date" value="<%= pub.open_date || "" %>"></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label for="p-area">Sous-titre (quartier)</label><input type="text" id="p-area" name="area" value="<%= pub.area %>" maxlength="120"></div>
+    <div class="field"><label for="p-email">E-mail du pub (reçoit les nouvelles réservations)</label><input type="email" id="p-email" name="email" value="<%= pub.email %>" maxlength="160"></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label for="p-company">Société qui exploite ce pub (mentions légales)</label><input type="text" id="p-company" name="company" value="<%= pub.company || "" %>" maxlength="120" placeholder="Goudale Tourelle Sàrl"></div>
+    <div class="field"><label for="p-ide">Numéro IDE de cette société</label><input type="text" id="p-ide" name="company_ide" value="<%= pub.company_ide || "" %>" maxlength="40" placeholder="CHE-123.456.789"></div>
+  </div>
+  <div class="field"><label for="p-addr">Adresse</label><textarea id="p-addr" name="addr" maxlength="300"><%= pub.addr %></textarea></div>
+  <div class="grid3">
+    <div class="field"><label for="p-tel">Téléphone</label><input type="tel" id="p-tel" name="tel" value="<%= pub.tel %>" maxlength="32"></div>
+    <div class="field"><label for="p-serv">Sur place</label><input type="text" id="p-serv" name="services" value="<%= pub.services %>" maxlength="200" placeholder="Terrasse · à l'emporter"></div>
+    <div class="field"><label for="p-serven">Sur place (EN)</label><input type="text" id="p-serven" name="services_en" value="<%= pub.services_en %>" maxlength="200"></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label for="p-maps">Lien Google Maps</label><input type="url" id="p-maps" name="maps_url" value="<%= pub.maps_url %>" placeholder="https://"></div>
+    <div class="field"><label for="p-rev">Lien « Laisser un avis » Google</label><input type="url" id="p-rev" name="review_url" value="<%= pub.review_url %>" placeholder="https://g.page/r/…/review"></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label for="p-capm">Places midi (avant 16 h)</label><input type="number" id="p-capm" name="cap_midi" min="0" value="<%= pub.cap_midi == null ? "" : pub.cap_midi %>" placeholder="Vide = pas de limite"></div>
+    <div class="field"><label for="p-caps">Places soir (dès 16 h)</label><input type="number" id="p-caps" name="cap_soir" min="0" value="<%= pub.cap_soir == null ? "" : pub.cap_soir %>" placeholder="Vide = pas de limite"></div>
+  </div>
+  <fieldset class="hours-ed"><legend class="flabel">Horaires (ex. 11:30 – 00:00 ; « Fermé » ; vide = à compléter)</legend>
+    <% days.forEach(function(d, i){ %><div class="field"><label for="h<%= i %>"><%= d %></label><input type="text" id="h<%= i %>" name="h<%= i %>" value="<%= pub.hours[i] || "" %>" maxlength="40"></div><% }) %>
+  </fieldset>
+  <button class="btn" type="submit">Enregistrer <%= pub.name %></button>
+</form>
+<%- include("_bottom") %>

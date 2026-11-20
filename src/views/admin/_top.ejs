@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title><%= typeof title !== "undefined" ? title + " · " : "" %>Gérant · Pub Goudale</title>
+<link rel="icon" href="/static/img/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/site.css?v=<%= v %>">
+<link rel="stylesheet" href="/static/css/admin.css?v=<%= v %>">
+</head>
+<body class="admin">
+<% if (user) { var owner = user.role === "owner"; %>
+<header class="top">
+  <div class="wrap bar">
+    <a class="logo" href="/admin">GOUDALE <small>GÉRANT</small></a>
+    <div class="hdr-actions">
+      <span class="who small"><%= user.name %> · <%= owner ? "Propriétaire" : "Gérant " + ((pubsAll.find(function(p){ return p.id === user.pub_id; }) || {}).name || "") %></span>
+      <a class="langsw" href="/fr" target="_blank" rel="noopener">Voir le site</a>
+      <form method="post" action="/admin/logout"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn ghost sm" type="submit">Déconnexion</button></form>
+    </div>
+  </div>
+  <nav class="wrap anav" aria-label="Espace gérant">
+    <% var nav = [["/admin", "Réservations"], ["/admin/groupes", "Groupes"], ["/admin/fidelite", "Fidélité"], ["/admin/epuise", "Épuisé"]];
+       if (owner) nav = nav.concat([["/admin/semaine", "Menu semaine"], ["/admin/contenu/carte", "Carte"], ["/admin/contenu/matchs", "Matchs"], ["/admin/contenu/formules", "Formules"], ["/admin/pubs/chatelaine", "Pubs & capacité"], ["/admin/photos", "Photos"], ["/admin/newsletter", "Newsletter"], ["/admin/ouverture", "Concorde"], ["/admin/qr", "QR codes"], ["/admin/reglages", "Réglages"], ["/admin/utilisateurs", "Comptes"], ["/admin/journal", "Journal"]]);
+       nav.push(["/admin/compte", "Mon compte"]);
+       nav.forEach(function(n){ var on = n[0] === "/admin" ? (path === "/admin" || path === "/admin/") : (path.indexOf(n[0]) === 0 || (n[0].indexOf("/admin/pubs") === 0 && path.indexOf("/admin/pubs") === 0)); %>
+      <a href="<%= n[0] %>"<%= on ? ' aria-current="page"' : "" %>><%= n[1] %></a>
+    <% }) %>
+  </nav>
+</header>
+<% } %>
+<main class="wrap amain" id="contenu">
+<% if (flash) { %><div class="aflash <%= flash.type %>" role="status"><%= flash.text %></div><% } %>

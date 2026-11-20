@@ -1,0 +1,9 @@
+<%- include("../partials/head", { title: "Newsletter · Pub Goudale", noindex: true }) %>
+<%- include("../partials/header") %>
+<main id="contenu" class="page"><div class="wrap statusbox">
+  <h1><%= t("news.eyebrow") %></h1>
+  <% if (found) { %>
+  <form method="post" action="/<%= lang %>/newsletter/desinscription/<%= token %>"><button class="btn" type="submit"><%= t("mail.unsubscribe") %></button></form>
+  <% } else { %><p><%= t("flash.newsUnsub") %></p><% } %>
+</div></main>
+<%- include("../partials/footer") %>

@@ -1,0 +1,31 @@
+<%- include("_top", { title: "Fidélité" }) %>
+<h1 class="atitle">Carte fidélité</h1>
+<div class="stats">
+  <div class="stat"><b class="mono"><%= st.cards %></b><span>cartes</span></div>
+  <div class="stat"><b class="mono"><%= st.total %></b><span>tampons donnés</span></div>
+  <div class="stat<%= ready ? " alert" : "" %>"><b class="mono"><%= ready %></b><span>bières offertes à servir</span></div>
+  <div class="stat"><b class="mono"><%= st.gifts %></b><span>bières offertes servies</span></div>
+</div>
+<form class="lookup" method="get" action="/admin/fidelite">
+  <div class="field"><label for="code">Code du client</label><input type="text" id="code" name="code" value="<%= code %>" class="otp" autocomplete="off" autocapitalize="characters" placeholder="K7M2QX" autofocus></div>
+  <button class="btn" type="submit">Rechercher</button>
+</form>
+<% if (searched && !card) { %><div class="empty">Aucune carte avec le code « <%= code %> ». Les codes n'ont ni O, ni I, ni 0, ni 1.</div><% } %>
+<% if (card) { var n = Math.min(10, card.stamps); %>
+<section class="card">
+  <div class="ahead"><span class="code"><%= card.code %></span><span class="pill <%= n >= 10 ? "done" : "pending" %>"><%= n %> / 10</span></div>
+  <div class="caps admin-caps"><% for (var i = 0; i < 10; i++) { %><div class="cap<%= i < n ? " on" : "" %>"><%= i + 1 %></div><% } %></div>
+  <div class="actions">
+    <% if (n >= 10) { %>
+    <form method="post" action="/admin/fidelite/<%= card.id %>/gift"><%- include("_csrf") %><button class="btn ok" type="submit">Bière offerte servie</button></form>
+    <% } else { %>
+    <form method="post" action="/admin/fidelite/<%= card.id %>/stamp"><%- include("_csrf") %><input type="hidden" name="n" value="1"><button class="btn" type="submit">+1 tampon</button></form>
+    <form method="post" action="/admin/fidelite/<%= card.id %>/stamp"><%- include("_csrf") %><input type="hidden" name="n" value="2"><button class="btn line" type="submit">+2</button></form>
+    <% } %>
+    <% if (n > 0 && n < 10) { %><form method="post" action="/admin/fidelite/<%= card.id %>/undo" data-confirm="Retirer ?"><%- include("_csrf") %><button class="btn sm danger" type="submit">Retirer un tampon</button></form><% } %>
+  </div>
+  <p class="small muted m0"><%= card.gifts %> bière(s) offerte(s) au total · carte créée le <%= U.fmtDate(U.isoDate(new Date(+card.created_at)), "fr") %> · 6 tampons maximum par jour.</p>
+  <% if (events.length) { %><details><summary>Derniers mouvements</summary><ul class="small"><% events.forEach(function(e){ %><li><%= new Date(+e.created_at).toLocaleString("fr-CH") %> · <%= e.kind === "stamp" ? "+" + e.delta + " tampon(s)" : e.kind === "gift" ? "bière offerte" : "tampon retiré" %><%= e.pub_id ? " · " + e.pub_id : "" %></li><% }) %></ul></details><% } %>
+</section>
+<% } %>
+<%- include("_bottom") %>

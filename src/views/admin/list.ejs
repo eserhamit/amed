@@ -1,0 +1,25 @@
+<%- include("_top", { title: def.title }) %>
+<h1 class="atitle"><%= def.title %></h1>
+<% if (def.help) { %><p class="muted"><%= def.help %></p><% } %>
+<% function e(x){ return String(x == null ? "" : x).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+   function input(f, r, id) {
+  var v = r ? r[f.k] : (f.type === "int" ? 0 : "");
+  if (f.type === "check") return '<label class="ck"><input type="checkbox" name="' + f.k + '" value="1" id="' + id + '"' + (v ? " checked" : "") + '> ' + f.l + '</label>';
+  if (f.type === "select") return '<div class="field"><label for="' + id + '">' + f.l + '</label><select name="' + f.k + '" id="' + id + '">' + f.options.map(function(o){ return '<option value="' + o[0] + '"' + (String(v) === o[0] ? " selected" : "") + '>' + e(o[1]) + '</option>'; }).join("") + '</select></div>';
+  if (f.type === "pub") return '<div class="field"><label for="' + id + '">' + f.l + '</label><select name="' + f.k + '" id="' + id + '"><option value="">Tous</option>' + pubs.map(function(p){ return '<option value="' + p.id + '"' + (v === p.id ? " selected" : "") + '>' + e(p.name) + '</option>'; }).join("") + '</select></div>';
+  return '<div class="field"><label for="' + id + '">' + f.l + '</label><input type="' + (f.type === "int" ? "number" : f.type === "time" ? "time" : "text") + '" name="' + f.k + '" id="' + id + '" value="' + e(v) + '"' + (f.max ? ' maxlength="' + f.max + '"' : "") + (f.req ? " required" : "") + '></div>';
+} %>
+<div class="ed">
+<% rows.forEach(function(r){ %>
+  <form class="ed-row" method="post" action="/admin/contenu/<%= key %>/<%= r.id %>"><%- include("_csrf") %>
+    <% def.fields.forEach(function(f){ %><%- input(f, r, key + "-" + r.id + "-" + f.k) %><% }) %>
+    <div class="ed-acts"><button class="btn sm" type="submit" name="_action" value="save">Enregistrer</button><button class="btn sm danger" type="submit" name="_action" value="delete" formnovalidate data-confirm-btn="Supprimer définitivement ?">Supprimer</button></div>
+  </form>
+<% }) %>
+</div>
+<h2 class="asub">Ajouter</h2>
+<form class="ed-row new" method="post" action="/admin/contenu/<%= key %>/new"><%- include("_csrf") %>
+  <% def.fields.forEach(function(f){ %><%- input(f, null, key + "-new-" + f.k) %><% }) %>
+  <div class="ed-acts"><button class="btn sm" type="submit" name="_action" value="save">Ajouter</button></div>
+</form>
+<%- include("_bottom") %>

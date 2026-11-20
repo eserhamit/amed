@@ -1,0 +1,33 @@
+<%- include("_top", { title: "Mon compte" }) %>
+<h1 class="atitle">Mon compte</h1>
+<div class="split2">
+<section class="card">
+  <h2 class="asub">Double authentification</h2>
+  <% if (user.totp_enabled) { %>
+    <p class="m0"><span class="pill confirmed">Activée</span> Un code de votre application est demandé à chaque connexion.</p>
+    <% if (!require2fa) { %>
+    <form method="post" action="/admin/compte/2fa/desactiver" data-confirm="Confirmer la désactivation ?"><%- include("_csrf") %>
+      <div class="field"><label for="d-pw">Mot de passe</label><input type="password" id="d-pw" name="password" autocomplete="current-password" required></div>
+      <button class="btn sm danger" type="submit">Désactiver</button></form>
+    <% } %>
+  <% } else { %>
+    <p class="m0"><%= require2fa ? "Obligatoire sur ce site. " : "" %>1. Installez une application d'authentification (Google Authenticator, Microsoft Authenticator, 1Password…). 2. Scannez ce QR code. 3. Saisissez le code affiché.</p>
+    <div class="qrbox"><%- setup.qr %></div>
+    <p class="small m0">Ou saisissez la clé : <span class="mono"><%= setup.secret %></span></p>
+    <form method="post" action="/admin/compte/2fa"><%- include("_csrf") %>
+      <div class="field"><label for="t-code">Code à 6 chiffres</label><input type="text" id="t-code" name="code" inputmode="numeric" autocomplete="one-time-code" class="otp" required></div>
+      <button class="btn" type="submit">Activer</button></form>
+  <% } %>
+</section>
+<section class="card">
+  <h2 class="asub">Changer le mot de passe</h2>
+  <form method="post" action="/admin/compte/mot-de-passe" class="stack"><%- include("_csrf") %>
+    <div class="field"><label for="p-cur">Mot de passe actuel</label><input type="password" id="p-cur" name="current" autocomplete="current-password" required></div>
+    <div class="field"><label for="p-new">Nouveau mot de passe (12 caractères minimum)</label><input type="password" id="p-new" name="next" autocomplete="new-password" minlength="12" required></div>
+    <div class="field"><label for="p-conf">Confirmer</label><input type="password" id="p-conf" name="confirm" autocomplete="new-password" minlength="12" required></div>
+    <p class="small muted m0">Astuce : une phrase de 4 ou 5 mots est plus sûre et plus facile à retenir qu'un mot compliqué.</p>
+    <button class="btn" type="submit">Changer</button>
+  </form>
+</section>
+</div>
+<%- include("_bottom") %>

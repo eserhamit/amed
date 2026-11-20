@@ -1,0 +1,16 @@
+<%- include("_top", { title: "Menu de la semaine" }) %>
+<h1 class="atitle">Menu de la semaine</h1>
+<p class="muted">Saisissez le menu le lundi matin : il alimente le site, l'écran TV, la page « Ce soir » et l'e-mail du lundi. Laissez l'anglais vide pour reprendre le français.</p>
+<form method="post" action="/admin/semaine" class="ed"><%- include("_csrf") %>
+<% week.forEach(function(w, d){ %>
+  <fieldset class="ed-row week-row"><legend class="flabel"><%= days[d] %></legend>
+    <div class="field"><label for="w<%= d %>n">Plat</label><input type="text" id="w<%= d %>n" name="name<%= d %>" value="<%= w.name %>" maxlength="120"></div>
+    <div class="field"><label for="w<%= d %>d">Accompagnement</label><input type="text" id="w<%= d %>d" name="descr<%= d %>" value="<%= w.descr %>" maxlength="240"></div>
+    <div class="field"><label for="w<%= d %>p">Prix</label><input type="text" id="w<%= d %>p" name="price<%= d %>" value="<%= w.price %>" maxlength="40"></div>
+    <div class="field"><label for="w<%= d %>ne">Plat (EN)</label><input type="text" id="w<%= d %>ne" name="name_en<%= d %>" value="<%= w.name_en %>" maxlength="120"></div>
+    <div class="field"><label for="w<%= d %>de">Accompagnement (EN)</label><input type="text" id="w<%= d %>de" name="descr_en<%= d %>" value="<%= w.descr_en %>" maxlength="240"></div>
+  </fieldset>
+<% }) %>
+<button class="btn" type="submit">Enregistrer la semaine</button>
+</form>
+<%- include("_bottom") %>

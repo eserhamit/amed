@@ -1,0 +1,3 @@
+<% if (errors && errors.length && typeof form !== "undefined" && errorForm === form) { %>
+<div class="errors" role="alert" id="<%= form %>-errors"><b><%= t("errors.title") %></b><ul><% errors.forEach(function(e){ %><li><%= e %></li><% }) %></ul></div>
+<% } %>

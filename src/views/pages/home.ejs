@@ -1,0 +1,242 @@
+<%- include("../partials/head") %>
+<%- include("../partials/header") %>
+<main id="contenu">
+<% var hero = c.photo("hero"); %>
+<section class="hero<%= hero ? " has-photo" : "" %>" id="accueil">
+  <% if (hero) { %><img class="hero-photo" src="/media/<%= hero.file %>-1600.webp" srcset="/media/<%= hero.file %>-800.webp 800w, /media/<%= hero.file %>-1600.webp 1600w" sizes="100vw" alt="" width="<%= hero.width %>" height="<%= hero.height %>" fetchpriority="high"><% } %>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><%= t("hero.eyebrow") %></div>
+      <h1><%= t("hero.title1") %><span><%= t("hero.title2") %></span></h1>
+      <p class="lead"><%= t("hero.lead") %></p>
+      <div class="actions">
+        <a class="btn" href="#reserver"><%= t("hero.book") %></a>
+        <a class="btn ghost" href="/<%= lang %>/ce-soir"><%= t("hero.tonight") %></a>
+      </div>
+      <% var wd = ti < 5 ? c.week[ti] : null; if (wd && wd.name) { %>
+      <a class="today-card" href="#semaine"><span class="mono"><%= t("hero.dish") %> · <%= t("days")[ti] %></span><b><%= tr(wd, "name") %><%= wd.price ? " · " + wd.price : "" %></b><span class="d"><%= tr(wd, "descr") %></span></a>
+      <% } %>
+    </div>
+    <% if (!hero) { %>
+    <svg class="pint" viewBox="0 0 220 300" role="img" aria-label="<%= lang === "en" ? "Glass of blonde beer" : "Verre de bière blonde" %>">
+      <defs><clipPath id="glass"><path d="M40 40 L180 40 L164 280 Q110 292 56 280 Z"/></clipPath></defs>
+      <g clip-path="url(#glass)"><rect width="220" height="300" fill="#C47F12"/><rect y="40" width="220" height="46" fill="#F6F1E2"/>
+        <g fill="#F6F1E2" opacity=".55"><circle cx="80" cy="150" r="3"/><circle cx="96" cy="200" r="2.5"/><circle cx="130" cy="175" r="3.5"/><circle cx="146" cy="230" r="2"/><circle cx="110" cy="250" r="3"/></g></g>
+      <path d="M40 40 L180 40 L164 280 Q110 292 56 280 Z" fill="none" stroke="#F6F1E2" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M36 44 Q50 18 76 30 Q92 8 118 24 Q140 6 160 28 Q186 22 184 46" fill="#F6F1E2"/>
+      <text x="110" y="170" text-anchor="middle" font-family="Big Shoulders Display, Impact, sans-serif" font-weight="900" font-size="44" fill="#1F3A2E">G</text>
+      <text x="110" y="196" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#1F3A2E" letter-spacing="2">7,2 % VOL.</text>
+    </svg>
+    <% } %>
+  </div>
+</section>
+
+<nav class="strip" aria-label="<%= t("nav.pubs") %>"><div class="wrap">
+  <% c.pubs.forEach(function(p){ var st = statuses[p.id]; %>
+  <a href="<%= p.status === "soon" ? "/" + lang + "/concorde" : "#pub-" + p.id %>"><span><span class="name"><%= p.name %></span><span class="num"><%= p.area %></span></span><span class="pill <%= st.cls %>"><%= st.cls === "soon" ? t("status.soonShort") : st.label.split(" · ")[0] %></span></a>
+  <% }) %>
+</div></nav>
+
+<section class="block" id="pubs">
+  <div class="wrap">
+    <div class="head">
+      <div class="stack"><div class="eyebrow"><%= t("pubs.eyebrow") %></div><h2><%= t("pubs.title") %></h2></div>
+      <p><%= t("pubs.lead") %></p>
+    </div>
+    <% c.pubs.forEach(function(p){ var st = statuses[p.id], soon = p.status === "soon", ph = c.photo("pub:" + p.id); %>
+    <article class="pub" id="pub-<%= p.id %>">
+      <div class="info">
+        <span class="pill <%= st.cls %>" data-status="<%= p.id %>"><%= st.label %></span>
+        <h3><%= p.name %></h3>
+        <% if (ph) { %><img class="pub-photo" src="/media/<%= ph.file %>-800.webp" alt="<%= tr(ph, "alt") || ("Pub Goudale " + p.name) %>" width="<%= ph.width %>" height="<%= ph.height %>" loading="lazy"><% } %>
+        <dl class="kv">
+          <dt><%= t("pubs.address") %></dt><dd><%= p.addr || "" %><% if (!p.addr) { %><span class="todo-txt"><%= soon ? t("status.soon") : t("pubs.todo") %></span><% } %></dd>
+          <dt><%= t("pubs.phone") %></dt><dd class="mono"><%= p.tel || "—" %></dd>
+          <% if (tr(p, "services")) { %><dt><%= t("pubs.onsite") %></dt><dd><%= tr(p, "services") %></dd><% } %>
+        </dl>
+        <div class="actions">
+          <% if (soon) { %><a class="btn" href="/<%= lang %>/concorde"><%= t("pubs.opening") %></a>
+          <% } else { %><a class="btn" href="?pub=<%= p.id %>#reserver"><%= t("pubs.bookHere") %></a>
+            <% if (p.maps_url) { %><a class="btn line" href="<%= p.maps_url %>" target="_blank" rel="noopener"><%= t("pubs.route") %></a><% } %>
+            <% if (p.review_url) { %><a class="btn line" href="<%= p.review_url %>" target="_blank" rel="noopener"><%= t("pubs.review") %></a><% } %>
+          <% } %>
+        </div>
+      </div>
+      <div class="hours">
+        <% if (soon) { %><h4><%= t("status.soonShort") %></h4><p><%= t("pubs.soonText", { date: p.open_date ? t("pubs.soonDate", { date: U.fmtDate(p.open_date, lang, true) }) : "" }) %></p>
+        <% } else { %><h4><%= t("pubs.hours") %></h4>
+          <% t("days").forEach(function(d, i){ %><div class="row<%= i === ti ? " today" : "" %>"><span><%= d %><%= i === ti ? " · " + t("pubs.today") : "" %></span><span><%= p.hours[i] || "—" %></span></div><% }) %>
+        <% } %>
+      </div>
+    </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="block tight-top" id="semaine">
+  <div class="wrap">
+    <div class="head">
+      <div class="stack"><div class="eyebrow"><%= t("week.eyebrow") %></div><h2><%= t("week.title") %></h2></div>
+      <p><%= t("week.lead") %></p>
+    </div>
+    <div class="week">
+      <% c.week.forEach(function(w, i){ %>
+      <div class="day<%= i === ti ? " today" : "" %>"><div class="dn"><%= t("days")[i] %><% if (i === ti) { %><span class="mono"><%= t("week.today") %></span><% } %></div>
+        <% if (w.name) { %><b><%= tr(w, "name") %></b><span class="d"><%= tr(w, "descr") %></span><span class="p"><%= w.price %></span><% } else { %><span class="d"><%= t("week.none") %></span><% } %></div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="block band-surface" id="carte">
+  <div class="wrap">
+    <div class="head">
+      <div class="stack"><div class="eyebrow"><%= t("carte.eyebrow") %></div><h2><%= t("carte.title") %></h2></div>
+      <p><%= t("carte.lead") %></p>
+    </div>
+    <div class="cols">
+      <% [["beers", c.beers], ["food", c.food]].forEach(function(col){ %>
+      <div><h3><%= t("carte." + col[0]) %></h3>
+        <% if (!col[1].length) { %><p class="muted"><%= t("carte.empty") %></p><% } %>
+        <% col[1].forEach(function(i){ %>
+        <div class="item<%= i.sold_out ? " out" : "" %>"><span class="n"><%= tr(i, "name") %><% if (i.sold_out) { %><span class="tag out"><%= t("carte.soldOut") %></span><% } else if (tr(i, "tag")) { %><span class="tag"><%= tr(i, "tag") %></span><% } %></span><span class="p"><%= i.price %></span><span class="d"><%= tr(i, "descr") %></span></div>
+        <% }) %>
+      </div>
+      <% }) %>
+    </div>
+    <% if (c.gallery.length) { %><div class="gallery"><% c.gallery.forEach(function(g){ %><img src="/media/<%= g.file %>-800.webp" alt="<%= tr(g, "alt") %>" width="<%= g.width %>" height="<%= g.height %>" loading="lazy"><% }) %></div><% } %>
+  </div>
+</section>
+
+<section class="block sport" id="sport">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow"><%= t("sport.eyebrow") %></div>
+      <h2><%= t("sport.title") %></h2>
+      <ul class="feat">
+        <li><span class="ico">01</span><span><b><%= t("sport.f1") %></b><br><span class="muted"><%= t("sport.f1d") %></span></span></li>
+        <li><span class="ico">02</span><span><b><%= t("sport.f2") %></b><br><span class="muted"><a href="/<%= lang %>/ce-soir"><%= t("sport.f2d") %></a></span></span></li>
+        <li><span class="ico">03</span><span><b><%= t("sport.f3") %></b><br><span class="muted"><a href="#groupes"><%= t("sport.f3d") %></a></span></span></li>
+      </ul>
+    </div>
+    <div class="board"><div class="bcap"><%= t("sport.board") %></div>
+      <% if (!c.matches.length) { %><div class="r"><span></span><span><%= t("sport.none") %></span><span></span></div><% } %>
+      <% c.matches.forEach(function(m){ var mp = c.pubs.find(function(p){ return p.id === m.pub_id; }); %>
+      <div class="r"><span class="t"><%= t("daysShort")[m.day] %></span><span><%= m.title %><br><span class="c"><%= m.sub %><%= mp ? " · " + mp.name : "" %></span></span><span><%= m.time %></span></div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="block band-soft" id="reserver">
+  <div class="wrap split">
+    <div class="stack-lg">
+      <div class="eyebrow"><%= t("resa.eyebrow") %></div>
+      <h2><%= t("resa.title") %></h2>
+      <p class="muted m0"><%= t("resa.lead") %></p>
+      <p class="m0 small"><a href="#groupes"><%= t("resa.groupsHint") %></a></p>
+    </div>
+    <form class="card" method="post" action="/<%= lang %>/reserver#reserver" id="resaForm" novalidate>
+      <%- include("../partials/errors", { form: "resa" }) %>
+      <%- include("../partials/antibot", { form: "resa" }) %>
+      <fieldset class="seg"><legend class="flabel"><%= t("resa.pub") %></legend>
+        <% var selP = values.pub || (c.openPubs[0] && c.openPubs[0].id); c.pubs.forEach(function(p){ var dis = p.status === "soon"; %>
+        <label><input type="radio" name="pub" value="<%= p.id %>"<%= dis ? " disabled" : "" %><%= !dis && selP === p.id ? " checked" : "" %> data-avail><span><%= p.name %><% if (dis) { %><small><%= t("resa.soonDisabled") %></small><% } %></span></label>
+        <% }) %>
+      </fieldset>
+      <div class="grid2">
+        <div class="field"><label for="f-date"><%= t("resa.date") %></label><input type="date" id="f-date" name="date" required min="<%= U.today() %>" max="<%= U.addDays(U.today(), 183) %>" value="<%= values.date || U.today() %>" data-avail></div>
+        <div class="field"><label for="f-time"><%= t("resa.time") %></label><input type="time" id="f-time" name="time" required value="<%= values.time || "19:30" %>" step="900" data-avail></div>
+      </div>
+      <p class="hint muted" id="availHint" aria-live="polite" data-left="<%= t("resa.left") %>" data-full="<%= t("resa.full") %>" data-closed="<%= t("errors.closed") %>"></p>
+      <div class="grid2">
+        <div class="field"><label for="f-pers"><%= t("resa.persons") %></label><input type="number" id="f-pers" name="persons" min="1" max="15" required value="<%= values.persons || 4 %>" inputmode="numeric"></div>
+        <div class="field"><label for="f-occ"><%= t("resa.occasion") %></label><select id="f-occ" name="occasion"><% t("resa.occasions").forEach(function(o){ %><option<%= values.occasion === o ? " selected" : "" %>><%= o %></option><% }) %></select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="f-name"><%= t("resa.name") %></label><input type="text" id="f-name" name="name" autocomplete="name" required maxlength="120" value="<%= values.name || "" %>"></div>
+        <div class="field"><label for="f-tel"><%= t("resa.phone") %></label><input type="tel" id="f-tel" name="phone" autocomplete="tel" required maxlength="32" placeholder="079 123 45 67" value="<%= values.phone || "" %>"></div>
+      </div>
+      <div class="field"><label for="f-email"><%= t("resa.email") %></label><input type="email" id="f-email" name="email" autocomplete="email" maxlength="160" required value="<%= values.email || "" %>"></div>
+      <div class="field"><label for="f-note"><%= t("resa.note") %></label><textarea id="f-note" name="note" maxlength="500" placeholder="<%= t("resa.notePh") %>"><%= values.note || "" %></textarea></div>
+      <p class="consent"><a href="/<%= lang %>/confidentialite"><%= t("resa.consent") %></a></p>
+      <button class="btn" type="submit"><%= t("resa.submit") %></button>
+    </form>
+  </div>
+</section>
+
+<section class="block" id="groupes">
+  <div class="wrap split">
+    <div class="stack-lg">
+      <div class="eyebrow"><%= t("groups.eyebrow") %></div>
+      <h2><%= t("groups.title") %></h2>
+      <p class="muted m0"><%= t("groups.lead") %></p>
+      <div class="formules">
+        <% if (!c.formules.length) { %><p class="muted m0"><%= t("groups.none") %></p><% } %>
+        <% c.formules.forEach(function(f){ %><div class="formule"><div><b><%= tr(f, "label") %></b><span class="muted small"><%= tr(f, "descr") %></span></div><span class="mono"><%= f.price_pp %>.– <%= t("groups.perPerson") %></span></div><% }) %>
+      </div>
+    </div>
+    <form class="card" method="post" action="/<%= lang %>/groupes#groupes" id="groupForm" novalidate>
+      <%- include("../partials/errors", { form: "group" }) %>
+      <%- include("../partials/antibot", { form: "group" }) %>
+      <div class="grid2">
+        <div class="field"><label for="g-pub"><%= t("groups.pub") %></label><select id="g-pub" name="pub"><% c.openPubs.forEach(function(p){ %><option value="<%= p.id %>"<%= values.pub === p.id ? " selected" : "" %>><%= p.name %></option><% }) %></select></div>
+        <div class="field"><label for="g-date"><%= t("groups.date") %></label><input type="date" id="g-date" name="date" min="<%= U.today() %>" value="<%= values.date || "" %>"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="g-pers"><%= t("groups.persons") %></label><input type="number" id="g-pers" name="persons" min="8" max="200" value="<%= values.persons || 20 %>" inputmode="numeric" data-est></div>
+        <div class="field"><label for="g-budget"><%= t("groups.budget") %></label><input type="number" id="g-budget" name="budget" min="0" step="50" value="<%= values.budget || "" %>" inputmode="numeric" data-est></div>
+      </div>
+      <fieldset class="seg"><legend class="flabel"><%= t("groups.formule") %></legend>
+        <% c.formules.forEach(function(f, i){ %><label><input type="radio" name="formule" value="<%= f.id %>" data-pp="<%= f.price_pp %>" data-name="<%= tr(f, "label") %>"<%= (values.formule ? values.formule === String(f.id) : i === 0) ? " checked" : "" %> data-est><span><%= tr(f, "label") %><small><%= f.price_pp %>.– <%= t("groups.perPerson") %></small></span></label><% }) %>
+        <label><input type="radio" name="formule" value="custom" data-pp="0"<%= (values.formule === "custom" || !c.formules.length) ? " checked" : "" %> data-est><span><%= t("groups.custom") %><small><%= t("groups.customSub") %></small></span></label>
+      </fieldset>
+      <div class="estimate" id="estimate" aria-live="polite" data-label="<%= t("groups.estimate") %>" data-custom="<%= t("groups.estimateCustom") %>" data-note="<%= t("groups.estimateNote") %>" data-over="<%= t("groups.overBudget") %>" data-alt="<%= t("groups.altFits") %>" data-none="<%= t("groups.altNone") %>"><span class="flabel"><%= t("groups.estimate") %></span><span><%= t("groups.estimateCustom") %></span></div>
+      <div class="grid3">
+        <div class="field"><label for="g-name"><%= t("groups.name") %></label><input type="text" id="g-name" name="name" autocomplete="name" maxlength="120" value="<%= values.name || "" %>"></div>
+        <div class="field"><label for="g-tel"><%= t("groups.phone") %></label><input type="tel" id="g-tel" name="phone" autocomplete="tel" maxlength="32" value="<%= values.phone || "" %>"></div>
+        <div class="field"><label for="g-email"><%= t("groups.email") %></label><input type="email" id="g-email" name="email" autocomplete="email" maxlength="160" value="<%= values.email || "" %>"></div>
+      </div>
+      <div class="field"><label for="g-note"><%= t("groups.note") %></label><textarea id="g-note" name="note" maxlength="1000" placeholder="<%= t("groups.notePh") %>"><%= values.note || "" %></textarea></div>
+      <p class="consent"><a href="/<%= lang %>/confidentialite"><%= t("resa.consent") %></a></p>
+      <button class="btn" type="submit"><%= t("groups.submit") %></button>
+    </form>
+  </div>
+</section>
+
+<section class="block on-dark" id="fidelite">
+  <div class="wrap split">
+    <div class="stack-lg">
+      <div class="eyebrow"><%= t("loyalty.eyebrow") %></div>
+      <h2><%= t("loyalty.title") %></h2>
+      <p class="m0 lead-dark"><%= t("loyalty.lead") %></p>
+    </div>
+    <div class="fidcard">
+      <div class="caps" aria-hidden="true"><% for (var i = 0; i < 10; i++) { %><div class="cap<%= i < 3 ? " on" : "" %><%= i === 9 ? " gift" : "" %>"><%= i === 9 ? "G" : i + 1 %></div><% } %></div>
+      <form class="fidform" method="post" action="/<%= lang %>/fidelite#fidelite" novalidate>
+        <%- include("../partials/errors", { form: "loyalty" }) %>
+        <%- include("../partials/antibot", { form: "loyalty" }) %>
+        <label class="flabel" for="l-email"><%= t("loyalty.ask") %></label>
+        <input type="email" id="l-email" name="email" autocomplete="email" maxlength="160" placeholder="<%= t("loyalty.email") %>" value="<%= values.loyaltyEmail || "" %>" required>
+        <button class="btn" type="submit"><%= t("loyalty.submit") %></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="newsl band-surface" id="newsletter">
+  <div class="wrap">
+    <div class="stack"><div class="eyebrow"><%= t("news.eyebrow") %></div><h2 class="h2-sm"><%= t("news.title") %></h2><p class="muted m0"><%= t("news.lead") %></p></div>
+    <form method="post" action="/<%= lang %>/newsletter#newsletter" novalidate>
+      <%- include("../partials/errors", { form: "news" }) %>
+      <%- include("../partials/antibot", { form: "news" }) %>
+      <input type="email" name="email" autocomplete="email" maxlength="160" placeholder="votre@email.ch" aria-label="<%= t("news.email") %>" value="<%= values.email && errorForm === "news" ? values.email : "" %>" required>
+      <button class="btn" type="submit"><%= t("news.submit") %></button>
+      <fieldset class="chk"><legend class="flabel"><%= t("news.pubs") %></legend>
+        <% c.pubs.forEach(function(p){ var on = !values.pubs || values.pubs.indexOf(p.id) !== -1; %><label><input type="checkbox" name="pubs" value="<%= p.id %>"<%= on ? " checked" : "" %>> <%= p.name %></label><% }) %>
+      </fieldset>
+    </form>
+  </div>
+</section>
+</main>
+<%- include("../partials/footer") %>

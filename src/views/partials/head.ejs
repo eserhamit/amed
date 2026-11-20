@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="<%= lang %>">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title><%= typeof title !== "undefined" ? title : t("meta.title") %></title>
+<meta name="description" content="<%= typeof desc !== "undefined" ? desc : t("meta.desc") %>">
+<% if (typeof noindex !== "undefined" && noindex) { %><meta name="robots" content="noindex"><% } else { %><link rel="canonical" href="<%= canonical %>">
+<% alternates.forEach(function(a){ %><link rel="alternate" hreflang="<%= a.lang %>" href="<%= a.href %>">
+<% }) %><link rel="alternate" hreflang="x-default" href="<%= siteUrl %>/fr"><% } %>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pub Goudale Genève">
+<meta property="og:title" content="<%= typeof title !== "undefined" ? title : t("meta.title") %>">
+<meta property="og:description" content="<%= typeof desc !== "undefined" ? desc : t("meta.desc") %>">
+<meta property="og:locale" content="<%= lang === "en" ? "en_GB" : "fr_CH" %>">
+<% var heroPhoto = c && c.photo("hero"); if (heroPhoto) { %><meta property="og:image" content="<%= siteUrl %>/media/<%= heroPhoto.file %>-1600.webp"><% } %>
+<meta name="theme-color" content="#1F3A2E">
+<link rel="icon" href="/static/img/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/static/fonts/bsd-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/static/css/site.css?v=<%= v %>">
+<% if (typeof jsonld !== "undefined") { %><script type="application/ld+json"><%- jsonld %></script><% } %>
+</head>

@@ -1,0 +1,44 @@
+{
+  "name": "pub-goudale-geneve",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site officiel des Pub Goudale de Genève : réservations, groupes, fidélité, newsletter et espace gérant.",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "NODE_ENV=development node --watch src/server.js",
+    "migrate": "knex --knexfile knexfile.js migrate:latest",
+    "seed": "node scripts/seed.js",
+    "create-admin": "node scripts/create-admin.js",
+    "postinstall": "node scripts/copy-fonts.js",
+    "test": "NODE_ENV=test node --test test/*.test.js",
+    "update": "git pull --ff-only && npm ci --omit=dev"
+  },
+  "dependencies": {
+    "@fontsource/big-shoulders-display": "^5.0.0",
+    "@fontsource/instrument-sans": "^5.0.0",
+    "@fontsource/jetbrains-mono": "^5.0.0",
+    "connect-session-knex": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.7.1",
+    "express-session": "^1.18.0",
+    "helmet": "^8.2.0",
+    "knex": "^3.1.0",
+    "multer": "^2.5.0",
+    "mysql2": "^3.11.0",
+    "node-cron": "^4.6.0",
+    "nodemailer": "^10.2.0",
+    "otplib": "^12.0.1",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^11.3.0"
+  }
+}

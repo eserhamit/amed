@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="<%= lang %>">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title><%= title %> · Pub Goudale</title><link rel="stylesheet" href="/static/css/site.css?v=<%= v %>"><link rel="icon" href="/static/img/icon.svg"></head>
+<body>
+<header class="top"><div class="wrap bar"><a class="logo" href="/<%= lang %>">GOUDALE <small>GENÈVE</small></a></div></header>
+<main class="page"><div class="wrap statusbox">
+  <div class="eyebrow mono"><%= code %></div>
+  <h1><%= title %></h1>
+  <p><%= text %></p>
+  <div class="actions"><a class="btn" href="/<%= lang %>"><%= t("errors.home") %></a></div>
+</div></main>
+</body></html>

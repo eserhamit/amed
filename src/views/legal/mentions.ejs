@@ -1,0 +1,31 @@
+<%- include("../partials/head", { title: t("meta.legal") }) %>
+<%- include("../partials/header") %>
+<% var S = c.settings, todo = lang === "en" ? "[to be completed in the manager area › Settings]" : "[à compléter dans l'espace gérant › Réglages]"; %>
+<main id="contenu" class="page"><div class="wrap">
+<% if (lang === "en") { %>
+  <h1>Legal notice</h1>
+  <h2>Website publisher</h2>
+  <p><%= S.company_name || "Blackstore Sàrl" %><br><%= S.company_address || todo %><br>UID: <%= S.company_ide || todo %><br>Email: <%= S.contact_email || todo %></p>
+  <h2>Operators of each pub</h2>
+  <ul><% c.pubs.forEach(function(p){ %><li><b>Pub Goudale <%= p.name %></b><%= p.addr ? " — " + String(p.addr).replace(/\n/g, ", ") : "" %> : <%= p.company || todo %><%= p.company_ide ? " (UID " + p.company_ide + ")" : "" %></li><% }) %></ul>
+  <h2>Hosting</h2>
+  <p>Infomaniak Network SA, Rue Eugène-Marziano 25, 1227 Les Acacias (GE), Switzerland. Data is stored in Switzerland.</p>
+  <h2>Intellectual property</h2>
+  <p>Texts, photos and logos on this site belong to the operating companies listed above or are used with permission. “La Goudale” is a trademark of Brasserie Goudale.</p>
+  <h2>Liability</h2>
+  <p>Prices, menus and opening hours are given for information and may change. A booking is only final once confirmed by the pub.</p>
+<% } else { %>
+  <h1>Mentions légales</h1>
+  <h2>Éditeur du site</h2>
+  <p><%= S.company_name || "Blackstore Sàrl" %><br><%= S.company_address || todo %><br>IDE : <%= S.company_ide || todo %><br>E-mail : <%= S.contact_email || todo %></p>
+  <h2>Exploitants de chaque pub</h2>
+  <ul><% c.pubs.forEach(function(p){ %><li><b>Pub Goudale <%= p.name %></b><%= p.addr ? " — " + String(p.addr).replace(/\n/g, ", ") : "" %> : <%= p.company || todo %><%= p.company_ide ? " (IDE " + p.company_ide + ")" : "" %></li><% }) %></ul>
+  <h2>Hébergement</h2>
+  <p>Infomaniak Network SA, Rue Eugène-Marziano 25, 1227 Les Acacias (GE), Suisse. Les données sont hébergées en Suisse.</p>
+  <h2>Propriété intellectuelle</h2>
+  <p>Les textes, photos et logos de ce site appartiennent aux sociétés exploitantes citées ci-dessus ou sont utilisés avec autorisation. « La Goudale » est une marque de la Brasserie Goudale.</p>
+  <h2>Responsabilité</h2>
+  <p>Les prix, menus et horaires sont donnés à titre indicatif et peuvent changer. Une réservation n'est définitive qu'après confirmation par le pub.</p>
+<% } %>
+</div></main>
+<%- include("../partials/footer") %>

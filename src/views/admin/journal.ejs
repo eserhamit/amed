@@ -1,0 +1,7 @@
+<%- include("_top", { title: "Journal" }) %>
+<h1 class="atitle">Journal des actions</h1>
+<p class="muted">Les 300 dernières actions de l'espace gérant (connexions, changements de statut, exports, modifications). Conservé 24 mois.</p>
+<div class="tablewrap"><table class="atable"><thead><tr><th>Date</th><th>Qui</th><th>Action</th><th>Détails</th><th>Adresse IP</th></tr></thead><tbody>
+<% rows.forEach(function(r){ %><tr class="<%= /fail/.test(r.action) ? "bad" : "" %>"><td class="mono"><%= new Date(+r.created_at).toLocaleString("fr-CH") %></td><td><%= r.user_name || "—" %></td><td class="mono"><%= r.action %></td><td class="small"><%= r.details %></td><td class="mono small"><%= r.ip %></td></tr><% }) %>
+</tbody></table></div>
+<%- include("_bottom") %>

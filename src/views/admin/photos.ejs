@@ -1,0 +1,23 @@
+<%- include("_top", { title: "Photos" }) %>
+<h1 class="atitle">Photos</h1>
+<p class="muted">Les photos sont recadrées pour le web, converties en WebP et nettoyées de leurs métadonnées (position GPS, appareil) avant publication.</p>
+<form class="card" method="post" action="/admin/photos" enctype="multipart/form-data">
+  <%- include("_csrf") %>
+  <div class="grid2">
+    <div class="field"><label for="slot">Emplacement</label><select id="slot" name="slot"><option value="hero">Grande photo d'accueil</option><% pubs.forEach(function(p){ %><option value="pub:<%= p.id %>">Photo du pub <%= p.name %></option><% }) %><option value="gallery">Galerie (sous la carte)</option></select></div>
+    <div class="field"><label for="photo">Fichier (JPEG, PNG, WebP, HEIC · 10 Mo max)</label><input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp,image/heic" required></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><label for="alt">Description pour les malvoyants (FR)</label><input type="text" id="alt" name="alt" maxlength="200" placeholder="Comptoir en bois et tireuses à Châtelaine"></div>
+    <div class="field"><label for="alt_en">Description (EN)</label><input type="text" id="alt_en" name="alt_en" maxlength="200"></div>
+  </div>
+  <button class="btn" type="submit">Ajouter la photo</button>
+</form>
+<div class="photogrid">
+<% if (!photos.length) { %><div class="empty">Aucune photo. Sans photo, l'accueil affiche le verre de Goudale illustré.</div><% } %>
+<% photos.forEach(function(p){ %>
+  <figure class="card"><img src="/media/<%= p.file %>-800.webp" alt="<%= p.alt %>" width="<%= p.width %>" height="<%= p.height %>" loading="lazy"><figcaption class="small"><b><%= p.slot === "hero" ? "Accueil" : p.slot === "gallery" ? "Galerie" : "Pub " + p.slot.slice(4) %></b> · <%= p.alt || "sans description" %></figcaption>
+    <form method="post" action="/admin/photos/<%= p.id %>/supprimer" data-confirm="Supprimer ?"><%- include("_csrf") %><button class="btn sm danger" type="submit">Supprimer</button></form></figure>
+<% }) %>
+</div>
+<%- include("_bottom") %>

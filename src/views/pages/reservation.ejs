@@ -1,0 +1,28 @@
+<%- include("../partials/head", { title: t("resaStatus.title") + " · Pub Goudale", noindex: true }) %>
+<%- include("../partials/header") %>
+<main id="contenu" class="page">
+  <div class="wrap statusbox">
+    <div class="eyebrow"><%= t("resaStatus.title") %></div>
+    <h1><%= pub.name || "" %></h1>
+    <span class="pill <%= r.status %>"><%= t("resaStatus." + r.status) %></span>
+    <dl class="kv card">
+      <dt><%= t("resa.date") %></dt><dd><%= U.fmtDate(r.date, lang, true) %></dd>
+      <dt><%= t("resa.time") %></dt><dd class="mono"><%= r.time %></dd>
+      <dt><%= t("resa.persons") %></dt><dd><%= r.persons %></dd>
+      <dt><%= t("resa.name") %></dt><dd><%= r.name %></dd>
+      <% if (pub.tel) { %><dt><%= t("pubs.phone") %></dt><dd class="mono"><%= pub.tel %></dd><% } %>
+    </dl>
+    <p class="m0"><%= t("resaStatus." + r.status + "Text") %></p>
+    <div class="actions">
+      <% if (r.status === "done" && pub.review_url) { %><a class="btn" href="<%= pub.review_url %>" target="_blank" rel="noopener"><%= t("resaStatus.leaveReview") %></a><% } %>
+      <% if (canCancel) { %>
+      <form method="post" action="/<%= lang %>/reservation/<%= r.token %>/annuler" data-confirm="<%= t("resaStatus.cancelConfirm") %> ?">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button class="btn danger" type="submit"><%= t("resaStatus.cancel") %></button>
+      </form>
+      <% } %>
+      <a class="btn line" href="/<%= lang %>#reserver"><%= t("resaStatus.newBooking") %></a>
+    </div>
+  </div>
+</main>
+<%- include("../partials/footer") %>

@@ -1,0 +1,11 @@
+<%- include("_top", { title: "Épuisé en un clic" }) %>
+<h1 class="atitle">Épuisé en un clic</h1>
+<p class="muted">Le site, l'écran TV et l'e-mail du lundi se mettent à jour tout de suite.</p>
+<div class="toggles">
+<% if (!items.length) { %><div class="empty">La carte est vide.</div><% } %>
+<% items.forEach(function(i){ %>
+  <div class="toggle<%= i.sold_out ? " out" : "" %>"><span><span class="flabel"><%= i.kind === "beer" ? "Pression" : "Cuisine" %></span><br><b><%= i.name %></b></span>
+    <form method="post" action="/admin/epuise/<%= i.id %>"><%- include("_csrf") %><button class="btn sm <%= i.sold_out ? "danger" : "ok" %>" type="submit" aria-pressed="<%= i.sold_out %>"><%= i.sold_out ? "Épuisé · remettre en vente" : "Disponible" %></button></form></div>
+<% }) %>
+</div>
+<%- include("_bottom") %>

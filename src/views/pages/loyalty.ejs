@@ -1,0 +1,14 @@
+<%- include("../partials/head", { title: t("loyalty.cardTitle") + " · Pub Goudale", noindex: true }) %>
+<%- include("../partials/header") %>
+<main id="contenu" class="block on-dark">
+  <div class="wrap split">
+    <div class="stack-lg"><div class="eyebrow"><%= t("loyalty.eyebrow") %></div><h1 class="h2-sm"><%= t("loyalty.cardTitle") %></h1><p class="m0 lead-dark"><%= t("loyalty.keep") %></p></div>
+    <div class="fidcard">
+      <div class="fidcode"><div class="qrbox"><%- qr %></div><div class="stack"><span class="flabel"><%= t("loyalty.myCode") %></span><span class="code"><%= card.code %></span><span class="small"><%= t("loyalty.showCode") %></span></div></div>
+      <% var n = Math.min(10, card.stamps); %>
+      <div class="caps" role="img" aria-label="<%= n %> / 10"><% for (var i = 0; i < 10; i++) { %><div class="cap<%= i < n ? " on" : "" %><%= i === 9 && n < 10 ? " gift" : "" %>"><%= i === 9 ? "G" : i + 1 %></div><% } %></div>
+      <p class="m0"><% if (n >= 10) { %><b><%= t("loyalty.ready") %></b><% } else { %><%= t("loyalty.left", { n: 10 - n }) %><% } %><% if (card.gifts) { %> · <%= t("loyalty.gifts", { n: card.gifts }) %><% } %></p>
+    </div>
+  </div>
+</main>
+<%- include("../partials/footer") %>

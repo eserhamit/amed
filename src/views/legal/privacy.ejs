@@ -1,0 +1,47 @@
+<%- include("../partials/head", { title: t("meta.privacy") }) %>
+<%- include("../partials/header") %>
+<% var S = c.settings, todo = lang === "en" ? "[to be completed]" : "[à compléter]", months = S.retention_months || "12"; %>
+<main id="contenu" class="page"><div class="wrap">
+<% if (lang === "en") { %>
+  <h1>Privacy policy</h1>
+  <p>This policy explains how <%= S.company_name || "Blackstore Sàrl" %> processes your personal data under the Swiss Federal Act on Data Protection (FADP/nLPD). Last updated: <%= S.privacy_updated || "November 2026" %>.</p>
+  <h2>Controller</h2>
+  <p><%= S.company_name || "Blackstore Sàrl" %>, <%= S.company_address || todo %>, for the website. Bookings and requests for each pub are also processed by the company operating it: <%= c.pubs.filter(function(p){ return p.company; }).map(function(p){ return "Pub Goudale " + p.name + " — " + p.company; }).join(" · ") %>. Contact: <%= S.contact_email || todo %>.</p>
+  <h2>Data we collect and why</h2>
+  <ul>
+    <li><b>Bookings</b>: name, phone number, email, date, time, number of guests and message. Used to manage your booking and send you its confirmation by email.</li>
+    <li><b>Group requests</b>: name, phone and/or email, details of your event. Used to send you an offer.</li>
+    <li><b>Newsletter</b>: email address and preferred pubs, only after you confirm by clicking the link we send (double opt-in).</li>
+    <li><b>Loyalty card</b>: email address, card code and number of stamps.</li>
+    <li><b>Concorde opening</b>: name, email and number of guests.</li>
+  </ul>
+  <p>We do not use advertising or tracking cookies and no analytics tool. Fonts are served from our own server. A technical cookie protects forms against fraudulent submissions (CSRF).</p>
+  <h2>Retention</h2>
+  <p>Booking and group request details are anonymised <%= months %> months after the date. Newsletter data is kept until you unsubscribe; unconfirmed sign-ups are deleted after 30 days. Loyalty cards unused for 24 months are deleted.</p>
+  <h2>Processors and transfers</h2>
+  <p>Hosting and email: Infomaniak Network SA (Switzerland).</p>
+  <h2>Your rights</h2>
+  <p>You can ask to access, correct or delete your data, or object to its processing, by writing to <%= S.contact_email || todo %>. You can unsubscribe from the newsletter at any time using the link in each email. You can also contact the Federal Data Protection and Information Commissioner (FDPIC).</p>
+<% } else { %>
+  <h1>Protection des données</h1>
+  <p>Cette déclaration explique comment <%= S.company_name || "Blackstore Sàrl" %> traite vos données personnelles, conformément à la loi fédérale sur la protection des données (nLPD). Dernière mise à jour : <%= S.privacy_updated || "novembre 2026" %>.</p>
+  <h2>Responsable du traitement</h2>
+  <p><%= S.company_name || "Blackstore Sàrl" %>, <%= S.company_address || todo %>, pour le site. Les réservations et demandes de chaque pub sont aussi traitées par la société qui l'exploite : <%= c.pubs.filter(function(p){ return p.company; }).map(function(p){ return "Pub Goudale " + p.name + " — " + p.company; }).join(" · ") %>. Contact : <%= S.contact_email || todo %>.</p>
+  <h2>Données collectées et finalités</h2>
+  <ul>
+    <li><b>Réservations</b> : nom, numéro de téléphone, e-mail, date, heure, nombre de personnes et message. Pour gérer votre réservation et vous envoyer sa confirmation par e-mail.</li>
+    <li><b>Demandes de groupe</b> : nom, téléphone et/ou e-mail, détails de l'événement. Pour vous faire une offre.</li>
+    <li><b>Newsletter</b> : adresse e-mail et pubs choisis, uniquement après confirmation par le lien envoyé (double confirmation).</li>
+    <li><b>Carte fidélité</b> : adresse e-mail, code de la carte et nombre de tampons.</li>
+    <li><b>Ouverture Concorde</b> : nom, e-mail et nombre de personnes.</li>
+  </ul>
+  <p>Nous n'utilisons aucun cookie publicitaire ou de mesure d'audience. Les polices sont servies depuis notre propre serveur. Un cookie technique protège les formulaires contre les envois frauduleux (CSRF).</p>
+  <h2>Durée de conservation</h2>
+  <p>Les données des réservations et des demandes de groupe sont anonymisées <%= months %> mois après la date. Les données de la newsletter sont conservées jusqu'à votre désinscription ; les inscriptions non confirmées sont supprimées après 30 jours. Les cartes fidélité inutilisées depuis 24 mois sont supprimées.</p>
+  <h2>Sous-traitants et transferts</h2>
+  <p>Hébergement et e-mails : Infomaniak Network SA (Suisse).</p>
+  <h2>Vos droits</h2>
+  <p>Vous pouvez demander l'accès, la rectification ou la suppression de vos données, ou vous opposer à leur traitement, en écrivant à <%= S.contact_email || todo %>. Vous pouvez vous désinscrire de la newsletter à tout moment grâce au lien présent dans chaque e-mail. Vous pouvez aussi vous adresser au Préposé fédéral à la protection des données et à la transparence (PFPDT).</p>
+<% } %>
+</div></main>
+<%- include("../partials/footer") %>
